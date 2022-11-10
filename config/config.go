@@ -22,12 +22,11 @@ func GetValues() Config {
 	fields := reflect.VisibleFields(reflect.TypeOf(struct{ Config }{}))
 
 	for _, field := range fields {
-		fieldValue := reflect.ValueOf(&c).Elem().FieldByName(field.Name)
-
 		switch field.Type {
 		case reflect.TypeOf(string("")):
 			urlCleaned := checkAndCleanURL(getEnvValueString(field.Tag.Get("env")))
-			if fieldValue.String() == "" {
+
+			if urlCleaned == "" {
 				urlCleaned = field.Tag.Get("example")
 			}
 
@@ -76,6 +75,7 @@ func checkAndCleanURL(urlDirty string) string {
 }
 
 func getEnvValueString(env string) string {
+	fmt.Println("---!>", os.Getenv(env), env)
 	return os.Getenv(env)
 }
 func getEnvValueInt(env string) int {
@@ -92,4 +92,8 @@ func getEnvValueInt(env string) int {
 	}
 
 	return bar
+}
+
+func GetCompleteURL(c Config, path string) string {
+	return c.S3Endpoint + path
 }
