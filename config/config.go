@@ -11,10 +11,14 @@ import (
 // https://masto-cdn.s3.eu-central-003.backblazeb2.com/accounts/avatars/109/292/184/771/206/331/original/79ff3fa20a3d602d.gif
 
 type Config struct {
-	S3Endpoint   string `example:"https://localhost" env:"SS3C_S3_ENDPOINT"`   //has trailing slash
-	CORSDomain   string `example:"https://example.com" env:"SS3C_CORS_DOMAIN"` //has trailing slash
-	UseMaxRamGB  int    `example:"2" env:"SS3C_USE_MAX_RAM_GB"`
-	UseMaxDiskGb int    `example:"25" env:"SS3C_USE_MAX_DISK_GB"`
+	S3Endpoint     string `kind:"url" example:"https://localhost" env:"SS3C_S3_ENDPOINT"`   //has trailing slash
+	CORSDomain     string `kind:"url" example:"https://example.com" env:"SS3C_CORS_DOMAIN"` //has trailing slash
+	UseMaxRamGB    int    `kind:"int" example:"2" env:"SS3C_USE_MAX_RAM_GB"`
+	UseMaxDiskGb   int    `kind:"int" example:"25" env:"SS3C_USE_MAX_DISK_GB"`
+	InfluxDbUrl    string `kind:"url" example:"" env:"SS3C_INFLUXDB_URL"`
+	InfluxDbToken  string `kind:"string" example:"" env:"SS3C_INFLUXDB_TOKEN"`
+	InfluxDbOrg    string `kind:"string" example:"" env:"SS3C_INFLUXDB_ORG"`
+	InfluxDbBucket string `kind:"string" example:"" env:"SS3C_INFLUXDB_BUCKET"`
 }
 
 func GetValues() Config {
@@ -22,8 +26,8 @@ func GetValues() Config {
 	fields := reflect.VisibleFields(reflect.TypeOf(struct{ Config }{}))
 
 	for _, field := range fields {
-		switch field.Type {
-		case reflect.TypeOf(string("")):
+		switch field.Tag.Get("kind") {
+		case "url":
 			urlCleaned := checkAndCleanURL(getEnvValueString(field.Tag.Get("env")))
 
 			if urlCleaned == "" {
@@ -31,8 +35,14 @@ func GetValues() Config {
 			}
 
 			reflect.ValueOf(&c).Elem().FieldByName(field.Name).SetString(urlCleaned)
+		case "string":
+			value := getEnvValueString(field.Tag.Get("env"))
+			if value == "" {
+				value = field.Tag.Get("example")
+			}
 
-		case reflect.TypeOf(int(0)):
+			reflect.ValueOf(&c).Elem().FieldByName(field.Name).SetString(value)
+		case "int":
 			intValue := getEnvValueInt(field.Tag.Get("env"))
 			if intValue == 0 {
 				var err error
