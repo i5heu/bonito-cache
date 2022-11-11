@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
 
 	"github.com/i5heu/simple-S3-cache/config"
 	"github.com/valyala/fasthttp"
@@ -20,6 +21,7 @@ type Handler struct {
 }
 
 type DataStore struct {
+	mu sync.Mutex
 	// sha256 hash will be divided into 8 uneven parts so we can write while reading almost perfectly
 	Data map[string]map[string]map[string]map[string]map[string]map[string]map[string]map[string][]byte
 }
@@ -27,7 +29,6 @@ type DataStore struct {
 func main() {
 	conf := config.GetValues()
 	dataStore := createRamDataStore()
-	dataStore.Set("a24f2209335a321e15a1bd72455fec78bd2e87e6a2a4975fca7c4ec7475a4d9d", []byte("test"))
 
 	h := Handler{conf: conf, dataStore: &dataStore}
 
@@ -35,18 +36,15 @@ func main() {
 }
 
 func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "Hello, world")
+	ctx.Response.Header.Set("Access-Control-Allow-Origin", h.conf.CORSDomain)
+	ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET")
 
 	url := config.GetCompleteURL(h.conf, string(ctx.Path()))
-
-	// get sha256 hash from url
-	hash := sha256.New()
-	hash.Write([]byte(url))
-	sha256Hash := hex.EncodeToString(hash.Sum(nil))
-	fmt.Println(sha256Hash)
-
-	h.dataStore.Set(sha256Hash, []byte("test"))
-	fmt.Println(h.dataStore.Get(sha256Hash))
+	cachedData := h.dataStore.GetCacheData(url)
+	if cachedData != nil {
+		ctx.Response.SetBody(cachedData)
+		return
+	}
 
 	res, err := http.Get(url)
 	if err != nil {
@@ -61,10 +59,8 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 		log.Fatal(err)
 	}
 
+	h.dataStore.CacheData(url, bytes)
 	ctx.Response.SetBody(bytes)
-
-	ctx.Response.Header.Set("Access-Control-Allow-Origin", h.conf.CORSDomain)
-	ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET")
 }
 
 func createRamDataStore() DataStore {
@@ -80,35 +76,56 @@ type dada struct {
 }
 
 func (d *DataStore) Set(hash string, data []byte) {
-	createMap(0, d.Data, hash)
+	d.createMap(hash)
 	d.Data[hash[:1]][hash[1:2]][hash[2:3]][hash[3:4]][hash[4:6]][hash[6:12]][hash[12:24]][hash[24:63]] = data
 }
 
-func createMap(depth int, data interface{}, hash string) interface{} {
-	parts := []int{1, 2, 3, 4, 6, 12, 24, 63}
-	mapL := data.(map[string]interface{})
+func (d *DataStore) CacheData(url string, data []byte) {
+	hashGen := sha256.New()
+	hashGen.Write([]byte(url))
+	hash := hex.EncodeToString(hashGen.Sum(nil))
 
-	if mapL[hash[parts[depth]:parts[depth+1]]] == nil && depth >= 7 {
-		switch depth {
-		case 0:
-			return createMap(depth+1, make(map[string]map[string]map[string]map[string]map[string]map[string]map[string][]byte), hash)
-		case 1:
-			return createMap(depth+1, make(map[string]map[string]map[string]map[string]map[string]map[string][]byte), hash)
-		case 2:
-			return createMap(depth+1, make(map[string]map[string]map[string]map[string]map[string][]byte), hash)
-		case 3:
-			return createMap(depth+1, make(map[string]map[string]map[string]map[string][]byte), hash)
-		case 4:
-			return createMap(depth+1, make(map[string]map[string]map[string][]byte), hash)
-		case 5:
-			return createMap(depth+1, make(map[string]map[string][]byte), hash)
-		case 6:
-			return createMap(depth+1, make(map[string][]byte), hash)
-		default:
-			panic("not implemented")
-		}
+	d.createMap(hash)
+	d.Data[hash[:1]][hash[1:2]][hash[2:3]][hash[3:4]][hash[4:6]][hash[6:12]][hash[12:24]][hash[24:63]] = data
+}
 
+func (d *DataStore) GetCacheData(url string) []byte {
+	hashGen := sha256.New()
+	hashGen.Write([]byte(url))
+	hash := hex.EncodeToString(hashGen.Sum(nil))
+
+	return d.Data[hash[:1]][hash[1:2]][hash[2:3]][hash[3:4]][hash[4:6]][hash[6:12]][hash[12:24]][hash[24:63]]
+}
+
+// there must be a better way to do this
+func (d *DataStore) createMap(hash string) {
+	parts := []int{0, 1, 2, 3, 4, 6, 12, 24, 63}
+
+	if d.Data[hash[parts[0]:parts[1]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]] = make(map[string]map[string]map[string]map[string]map[string]map[string]map[string][]byte)
 	}
 
-	return data
+	if d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]] = make(map[string]map[string]map[string]map[string]map[string]map[string][]byte)
+	}
+
+	if d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]] = make(map[string]map[string]map[string]map[string]map[string][]byte)
+	}
+
+	if d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]] = make(map[string]map[string]map[string]map[string][]byte)
+	}
+
+	if d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]][hash[parts[4]:parts[5]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]][hash[parts[4]:parts[5]]] = make(map[string]map[string]map[string][]byte)
+	}
+
+	if d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]][hash[parts[4]:parts[5]]][hash[parts[5]:parts[6]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]][hash[parts[4]:parts[5]]][hash[parts[5]:parts[6]]] = make(map[string]map[string][]byte)
+	}
+
+	if d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]][hash[parts[4]:parts[5]]][hash[parts[5]:parts[6]]][hash[parts[6]:parts[7]]] == nil {
+		d.Data[hash[parts[0]:parts[1]]][hash[parts[1]:parts[2]]][hash[parts[2]:parts[3]]][hash[parts[3]:parts[4]]][hash[parts[4]:parts[5]]][hash[parts[5]:parts[6]]][hash[parts[6]:parts[7]]] = make(map[string][]byte)
+	}
 }
