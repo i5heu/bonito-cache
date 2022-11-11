@@ -1,7 +1,6 @@
 package log
 
 import (
-	"fmt"
 	"simple-S3-cache/config"
 	"strconv"
 	"time"
@@ -33,8 +32,6 @@ func (l *Logger) flushWorker() {
 }
 
 func (l *Logger) LogRequest(timeStart time.Time, url string, statusCode int, cached bool, fileSize uint) {
-	fmt.Println("Logging request HIT", strconv.FormatUint(uint64(fileSize), 10))
-
 	p := influxdb2.NewPointWithMeasurement("stat").
 		AddTag("statusCode", strconv.Itoa(statusCode)).
 		AddTag("cached", strconv.FormatBool(cached)).
