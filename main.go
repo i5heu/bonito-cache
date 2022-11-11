@@ -35,6 +35,7 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 	defer TimeTrack(time.Now(), "REQUEST-TOOK")
 	ctx.Response.Header.Set("Access-Control-Allow-Origin", h.conf.CORSDomain)
 	ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET")
+	ctx.Response.Header.Set("Cache-Control", "max-age=31536000")
 
 	url := config.GetCompleteURL(h.conf, string(ctx.Path()))
 	cachedData := h.dataStore.GetCacheData(url)
