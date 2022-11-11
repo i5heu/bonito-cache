@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"sync"
 
-	"github.com/i5heu/simple-S3-cache/config"
+	"simple-S3-cache/config"
 )
 
 type DataStore struct {

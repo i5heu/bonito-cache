@@ -5,9 +5,11 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 
-	"github.com/i5heu/simple-S3-cache/config"
-	"github.com/i5heu/simple-S3-cache/ramCache"
+	"simple-S3-cache/config"
+	"simple-S3-cache/ramCache"
+
 	"github.com/valyala/fasthttp"
 )
 
@@ -30,6 +32,7 @@ func main() {
 }
 
 func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
+	defer TimeTrack(time.Now(), "REQUEST-TOOK")
 	ctx.Response.Header.Set("Access-Control-Allow-Origin", h.conf.CORSDomain)
 	ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET")
 
@@ -56,4 +59,9 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 
 	h.dataStore.CacheData(url, bytes)
 	ctx.Response.SetBody(bytes)
+}
+
+func TimeTrack(start time.Time, name string) {
+	elapsed := time.Since(start)
+	log.Printf("%s took %s", name, elapsed)
 }
