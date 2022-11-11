@@ -41,7 +41,7 @@ func (d *DataStore) RamFileManager() {
 
 func (d *DataStore) garbageCollector(hitMap map[string]File) {
 	cacheSize := calculateCacheSize(hitMap)
-	fmt.Println("cache size:", bytesize.ByteSize(cacheSize).Format("%.4f", "MB", false))
+	fmt.Println("cache size:", bytesize.ByteSize(cacheSize).Format("%.5f", "GB", false))
 
 	if cacheSize < uint(d.Conf.UseMaxRamGB*int(bytesize.GB)) {
 		return
@@ -52,6 +52,7 @@ func (d *DataStore) garbageCollector(hitMap map[string]File) {
 			return
 		}
 
+		fmt.Println("REMOVING:", file.Hash)
 		d.Data.Delete(file.Hash)
 		delete(hitMap, file.Hash)
 		cacheSize -= file.Size
