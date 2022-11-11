@@ -61,9 +61,9 @@ func checkAndCleanURL(urlDirty string) string {
 		panic(err)
 	}
 
-	// check if url has trailing slash
-	if urlCleaned[len(urlCleaned)-1:] != "/" {
-		urlCleaned = urlCleaned + "/"
+	// remove trailing slash if present
+	if urlCleaned[len(urlCleaned)-1:] == "/" {
+		urlCleaned = urlCleaned[:len(urlCleaned)-1]
 	}
 
 	// check if url has protocol
