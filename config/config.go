@@ -13,7 +13,7 @@ import (
 type Config struct {
 	S3Endpoint   string `example:"https://localhost" env:"SS3C_S3_ENDPOINT"`   //has trailing slash
 	CORSDomain   string `example:"https://example.com" env:"SS3C_CORS_DOMAIN"` //has trailing slash
-	UseMaxRamGb  int    `example:"2" env:"SS3C_USE_MAX_RAM_GB"`
+	UseMaxRamGB  int    `example:"2" env:"SS3C_USE_MAX_RAM_GB"`
 	UseMaxDiskGb int    `example:"25" env:"SS3C_USE_MAX_DISK_GB"`
 }
 

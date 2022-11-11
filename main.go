@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/i5heu/simple-S3-cache/config"
 	"github.com/i5heu/simple-S3-cache/ramCache"
@@ -20,10 +19,13 @@ type Handler struct {
 func main() {
 
 	conf := config.GetValues()
-	dataStore := ramCache.Create()
+	dataStore := ramCache.DataStore{
+		Conf: conf,
+		Ch:   make(chan ramCache.File, 10000),
+	}
+	go dataStore.RamFileManager()
 
 	h := Handler{conf: conf, dataStore: &dataStore}
-
 	fasthttp.ListenAndServe(":8084", h.handler)
 }
 
@@ -41,7 +43,8 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 	res, err := http.Get(url)
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
-		os.Exit(1)
+		ctx.Response.SetStatusCode(500)
+		return
 	}
 
 	defer res.Body.Close()

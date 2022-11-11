@@ -11,6 +11,7 @@ require (
 )
 
 require (
+	github.com/inhies/go-bytesize v0.0.0-20220417184213-4913239db9cf
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/valyala/fasthttp v1.41.0

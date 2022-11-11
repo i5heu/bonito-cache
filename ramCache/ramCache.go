@@ -4,19 +4,20 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"sync"
+
+	"github.com/i5heu/simple-S3-cache/config"
 )
 
 type DataStore struct {
 	Data sync.Map
-}
-
-func Create() DataStore {
-	return DataStore{}
+	Conf config.Config
+	Ch   chan File
 }
 
 func (d *DataStore) Get(hash string) []byte {
 	val, ok := d.Data.Load(hash)
 	if ok {
+		d.Ch <- File{Hash: hash}
 		return val.([]byte)
 	}
 
@@ -25,6 +26,7 @@ func (d *DataStore) Get(hash string) []byte {
 
 func (d *DataStore) Set(hash string, data []byte) {
 	d.Data.Store(hash, data)
+	d.Ch <- File{Hash: hash, Size: uint(len(data))}
 }
 
 func (d *DataStore) CacheData(url string, data []byte) {
