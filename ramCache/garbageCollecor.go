@@ -2,6 +2,7 @@ package ramCache
 
 import (
 	"fmt"
+	"runtime"
 	"sort"
 	"time"
 
@@ -47,15 +48,20 @@ func (d *DataStore) garbageCollector(hitMap map[string]File) {
 		return
 	}
 
+	fileSizeRemoved := uint(0)
+	filesRemoved := 0
 	for _, file := range sortHitMapByHits(hitMap) {
 		if cacheSize < uint(d.Conf.UseMaxRamGB*int(bytesize.GB)) {
+			fmt.Println("Removed:", filesRemoved, "files with a total size of:", bytesize.ByteSize(fileSizeRemoved).Format("%.5f", "GB", false))
+			runtime.GC()
 			return
 		}
 
-		fmt.Println("REMOVING:", file.Hash)
 		d.Data.Delete(file.Hash)
 		delete(hitMap, file.Hash)
 		cacheSize -= file.Size
+		fileSizeRemoved += file.Size
+		filesRemoved++
 	}
 }
 

@@ -65,11 +65,10 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		panic(err)
+		fmt.Println("error reading response body: ", err)
 	}
 
 	size = uint(len(bytes))
 	h.dataStore.CacheData(url, bytes)
 	ctx.Response.SetBody(bytes)
-
 }
