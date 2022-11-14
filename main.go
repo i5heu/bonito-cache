@@ -23,7 +23,6 @@ func main() {
 
 	conf := config.GetValues()
 	logs := log.New(conf)
-	defer logs.Idb.Close()
 	dataStore := ramCache.DataStore{
 		Conf: conf,
 		Ch:   make(chan ramCache.File, 10000),

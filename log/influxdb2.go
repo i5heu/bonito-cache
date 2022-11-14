@@ -10,11 +10,16 @@ import (
 )
 
 type Logger struct {
-	Idb   influxdb2.Client
-	Write api.WriteAPI
+	Idb     influxdb2.Client
+	Write   api.WriteAPI
+	Enabled bool
 }
 
 func New(conf config.Config) Logger {
+	if conf.InfluxDbToken == "" {
+		return Logger{Enabled: false}
+	}
+
 	client := influxdb2.NewClient(conf.InfluxDbUrl, conf.InfluxDbToken)
 	writeAPI := client.WriteAPI(conf.InfluxDbOrg, conf.InfluxDbBucket)
 
@@ -32,6 +37,10 @@ func (l *Logger) flushWorker() {
 }
 
 func (l *Logger) LogRequest(timeStart time.Time, url string, statusCode int, cached bool, fileSize uint) {
+	if !l.Enabled {
+		return
+	}
+
 	p := influxdb2.NewPointWithMeasurement("stat").
 		AddTag("statusCode", strconv.Itoa(statusCode)).
 		AddTag("cached", strconv.FormatBool(cached)).
