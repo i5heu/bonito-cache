@@ -15,6 +15,7 @@ type Config struct {
 	CORSDomain     string `kind:"url" example:"https://example.com" env:"SS3C_CORS_DOMAIN"` //has trailing slash
 	UseMaxRamGB    int    `kind:"int" example:"2" env:"SS3C_USE_MAX_RAM_GB"`
 	UseMaxDiskGb   int    `kind:"int" example:"25" env:"SS3C_USE_MAX_DISK_GB"`
+	StoragePath    string `kind:"string" example:"/cache" env:"SS3C_STORAGE_PATH"`
 	InfluxDbUrl    string `kind:"url" example:"" env:"SS3C_INFLUXDB_URL"`
 	InfluxDbToken  string `kind:"string" example:"" env:"SS3C_INFLUXDB_TOKEN"`
 	InfluxDbOrg    string `kind:"string" example:"" env:"SS3C_INFLUXDB_ORG"`

@@ -11,6 +11,7 @@ import (
 
 type File struct {
 	Hash string
+	MIME string
 	Size uint // in bytes
 	hits uint
 }

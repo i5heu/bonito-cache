@@ -9,27 +9,33 @@ import (
 	"simple-S3-cache/config"
 	"simple-S3-cache/log"
 	"simple-S3-cache/ramCache"
+	"simple-S3-cache/storageCache"
 
 	"github.com/valyala/fasthttp"
 )
 
 type Handler struct {
-	conf      config.Config
-	dataStore *ramCache.DataStore
-	log       log.Logger
+	conf             config.Config
+	dataStoreRAM     *ramCache.DataStore
+	dataStoreStorage *storageCache.DataStore
+	log              log.Logger
 }
 
 func main() {
 
 	conf := config.GetValues()
 	logs := log.New(conf)
-	dataStore := ramCache.DataStore{
+	dataStoreRAM := ramCache.DataStore{
 		Conf: conf,
 		Ch:   make(chan ramCache.File, 10000),
 	}
-	go dataStore.RamFileManager()
+	go dataStoreRAM.RamFileManager()
+	dataStoreStorage := storageCache.DataStore{
+		Conf: conf,
+		Ch:   make(chan storageCache.File, 10000),
+	}
 
-	h := Handler{conf: conf, dataStore: &dataStore, log: logs}
+	h := Handler{conf: conf, dataStoreRAM: &dataStoreRAM, dataStoreStorage: &dataStoreStorage, log: logs}
 	fasthttp.ListenAndServe(":8084", h.handler)
 }
 
@@ -47,10 +53,21 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 	ctx.Response.Header.Set("Cache-Control", "max-age=31536000")
 
 	url := config.GetCompleteURL(h.conf, string(ctx.Path()))
-	cachedData := h.dataStore.GetCacheData(url)
+	cachedData, mime := h.dataStoreRAM.GetCacheData(url)
 	if cachedData != nil {
 		cached = true
 		size = uint(len(cachedData))
+		ctx.Response.Header.Set("Content-Type", mime)
+		ctx.Response.SetBody(cachedData)
+		return
+	}
+
+	cachedData, mime = h.dataStoreStorage.GetCacheData(url)
+	if cachedData != nil {
+		cached = true
+		h.dataStoreRAM.CacheData(url, cachedData, mime)
+		size = uint(len(cachedData))
+		ctx.Response.Header.Set("Content-Type", mime)
 		ctx.Response.SetBody(cachedData)
 		return
 	}
@@ -63,12 +80,19 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 	}
 	defer res.Body.Close()
 
+	if res.StatusCode != 200 {
+		ctx.Response.SetStatusCode(res.StatusCode)
+		return
+	}
+
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("error reading response body: ", err)
 	}
 
 	size = uint(len(bytes))
-	h.dataStore.CacheData(url, bytes)
+	h.dataStoreRAM.CacheData(url, bytes, res.Header.Get("Content-Type"))
+	h.dataStoreStorage.CacheData(url, bytes, res.Header.Get("Content-Type"))
+	ctx.Response.Header.Set("Content-Type", res.Header.Get("Content-Type"))
 	ctx.Response.SetBody(bytes)
 }
