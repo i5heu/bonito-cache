@@ -1,3 +1,7 @@
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/i5heu/simple-S3-cache)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/i5heu/simple-s3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-s3-cache)
+[![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/simple-s3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-s3-cache)
+
 # simple-S3-cache
 Just hook it in front of your public S3 bucket and enjoy reduction in bandwidth costs to your bucket
 
