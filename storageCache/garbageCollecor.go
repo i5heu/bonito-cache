@@ -36,6 +36,10 @@ func (d *DataStore) garbageCollector() {
 	cacheSize := calculateCacheSize(fileStats)
 	fmt.Println("cache size Storage:", bytesize.ByteSize(cacheSize).Format("%.5f", "GB", false))
 
+	defer func() {
+		d.Log.LogCache(time.Now(), "storageGC", cacheSize, uint(d.Conf.UseMaxDiskGb*int(bytesize.GB)))
+	}()
+
 	if cacheSize < uint(d.Conf.UseMaxDiskGb*int(bytesize.GB)) {
 		return
 	}
@@ -50,7 +54,6 @@ func (d *DataStore) garbageCollector() {
 	for _, file := range fileStats {
 		if cacheSize < uint(d.Conf.UseMaxDiskGb*int(bytesize.GB)) {
 			fmt.Println("Removed from Storage:", filesRemoved, "files with a total size of:", bytesize.ByteSize(fileSizeRemoved).Format("%.5f", "GB", false))
-			d.Log.LogCache(time.Now(), "storageGC", cacheSize, uint(d.Conf.UseMaxDiskGb*int(bytesize.GB)))
 			return
 		}
 		d.delete(file.Hash)
