@@ -13,6 +13,7 @@ This cache is still in development and is not ready for production use. It is no
 * `SS3C_CORS_DOMAIN` - The domain to allow CORS requests from. Defaults to `https://example.com`
 * `SS3C_USE_MAX_RAM_GB` - The maximum amount of RAM to use for caching. Defaults to `2` GB
 * `SS3C_USE_MAX_DISK_GB` - The maximum amount of disk space to use for caching. Defaults to `25` GB
+* `SS3C_STORAGE_PATH` - The path to store cached files. Defaults to `/cache`
 * `SS3C_INFLUXDB_URL` - The URL of your InfluxDB instance. Defaults to `""`
 * `SS3C_INFLUXDB_TOKEN` - The token to use for authentication with InfluxDB. Defaults to `""`
 * `SS3C_INFLUXDB_ORG` - The organization to use for authentication with InfluxDB. Defaults to `""`
@@ -38,7 +39,7 @@ services:
     ports:
       - 8080:8084
     volumes:
-      - ./cache:/storage
+      - ./cache:/cache
 ```
 
 ## Docker Hub
