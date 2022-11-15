@@ -23,7 +23,7 @@ func New(conf config.Config) Logger {
 	client := influxdb2.NewClient(conf.InfluxDbUrl, conf.InfluxDbToken)
 	writeAPI := client.WriteAPI(conf.InfluxDbOrg, conf.InfluxDbBucket)
 
-	l := Logger{Idb: client, Write: writeAPI}
+	l := Logger{Idb: client, Write: writeAPI, Enabled: true}
 	go l.flushWorker()
 
 	return l
