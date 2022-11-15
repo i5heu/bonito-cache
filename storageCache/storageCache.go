@@ -4,21 +4,14 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"log"
 	"os"
 	"simple-S3-cache/config"
+	"simple-S3-cache/log"
 	"time"
 )
 
-type File struct {
-	Hash string
-	Size uint // in bytes
-	hits uint
-}
-
 type DataStore struct {
 	Conf config.Config
-	Ch   chan File
 	Log  log.Logger
 }
 

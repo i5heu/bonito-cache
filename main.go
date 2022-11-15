@@ -28,12 +28,15 @@ func main() {
 	dataStoreRAM := ramCache.DataStore{
 		Conf: conf,
 		Ch:   make(chan ramCache.File, 10000),
+		Log:  logs,
 	}
 	go dataStoreRAM.RamFileManager()
+
 	dataStoreStorage := storageCache.DataStore{
 		Conf: conf,
-		Ch:   make(chan storageCache.File, 10000),
+		Log:  logs,
 	}
+	go dataStoreStorage.StorageFileManager()
 
 	h := Handler{conf: conf, dataStoreRAM: &dataStoreRAM, dataStoreStorage: &dataStoreStorage, log: logs}
 	fasthttp.ListenAndServe(":8084", h.handler)
