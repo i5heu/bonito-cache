@@ -57,7 +57,7 @@ func (l *Logger) LogCache(timeStart time.Time, cacheName string, cacheSize uint,
 		return
 	}
 
-	p := influxdb2.NewPointWithMeasurement("stat").
+	p := influxdb2.NewPointWithMeasurement("stat-cache").
 		AddTag("cacheName", cacheName).
 		AddField("cacheSize", cacheSize).
 		AddField("cacheSizeMax", cacheSizeMax).
