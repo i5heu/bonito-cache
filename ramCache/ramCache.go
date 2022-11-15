@@ -3,6 +3,7 @@ package ramCache
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"simple-S3-cache/log"
 	"sync"
 
 	"simple-S3-cache/config"
@@ -12,6 +13,7 @@ type DataStore struct {
 	Data sync.Map
 	Conf config.Config
 	Ch   chan File
+	Log  log.Logger
 }
 
 func (d *DataStore) Get(hash string) []byte {

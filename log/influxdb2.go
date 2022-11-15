@@ -51,3 +51,18 @@ func (l *Logger) LogRequest(timeStart time.Time, url string, statusCode int, cac
 
 	l.Write.WritePoint(p)
 }
+
+func (l *Logger) LogCache(timeStart time.Time, cacheName string, cacheSize uint, cacheSizeMax uint) {
+	if !l.Enabled {
+		return
+	}
+
+	p := influxdb2.NewPointWithMeasurement("stat").
+		AddTag("cacheName", cacheName).
+		AddField("cacheSize", cacheSize).
+		AddField("cacheSizeMax", cacheSizeMax).
+		AddField("duration", time.Since(timeStart).Milliseconds()).
+		SetTime(time.Now())
+
+	l.Write.WritePoint(p)
+}
