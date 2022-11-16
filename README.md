@@ -5,6 +5,10 @@
 # simple-S3-cache
 Just hook it in front of your public S3 bucket and enjoy reduction in bandwidth costs to your bucket
 
+## Status
+The project is working in its current state. It is not feature complete, but it is usable.
+The code needs some cleanup, refactoring and most importantly tests.
+
 ## !WARNING!
 This cache is still in development and is not ready for production use. It is not yet tested for security vulnerabilities.
 
