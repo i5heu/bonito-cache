@@ -5,9 +5,10 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
-	"simple-S3-cache/config"
-	"simple-S3-cache/log"
 	"time"
+
+	"github.com/i5heu/simple-S3-cache/internal/config"
+	"github.com/i5heu/simple-S3-cache/internal/log"
 )
 
 type DataStore struct {

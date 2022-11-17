@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"time"
 
-	"simple-S3-cache/config"
-	"simple-S3-cache/log"
-	"simple-S3-cache/ramCache"
-	"simple-S3-cache/storageCache"
+	"github.com/i5heu/simple-S3-cache/internal/config"
+	"github.com/i5heu/simple-S3-cache/internal/log"
+	"github.com/i5heu/simple-S3-cache/internal/ramCache"
+	"github.com/i5heu/simple-S3-cache/internal/storageCache"
 
 	"github.com/valyala/fasthttp"
 )

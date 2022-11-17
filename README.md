@@ -48,3 +48,8 @@ services:
 
 ## Docker Hub
 https://hub.docker.com/repository/docker/i5heu/simple-s3-cache
+
+## License
+
+simple-S3-cache © 2022 Mia Heidenstedt and contributors 
+SPDX-License-Identifier: AGPL-3.0

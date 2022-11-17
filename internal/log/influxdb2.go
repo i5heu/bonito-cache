@@ -1,9 +1,10 @@
 package log
 
 import (
-	"simple-S3-cache/config"
 	"strconv"
 	"time"
+
+	"github.com/i5heu/simple-S3-cache/internal/config"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"

@@ -3,10 +3,11 @@ package ramCache
 import (
 	"crypto/sha256"
 	"encoding/hex"
-	"simple-S3-cache/log"
 	"sync"
 
-	"simple-S3-cache/config"
+	"github.com/i5heu/simple-S3-cache/internal/log"
+
+	"github.com/i5heu/simple-S3-cache/internal/config"
 )
 
 type DataStore struct {
