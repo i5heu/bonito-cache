@@ -1,6 +1,7 @@
 package storageCache
 
 import (
+	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
@@ -28,9 +29,10 @@ func (d *DataStore) Get(hash string) ([]byte, string) {
 	}
 
 	dataRaw := data[260:]
-	mime := string(data[:260])
+	mimeByte := data[:260]
+	mime := string(mimeByte[:bytes.Index(mimeByte, []byte{0})])
 
-	err = os.Chtimes("../cache/"+hash, time.Now(), time.Now())
+	err = os.Chtimes(d.GetPath(hash), time.Now(), time.Now())
 	if err != nil {
 		fmt.Println(err)
 	}
