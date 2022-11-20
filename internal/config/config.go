@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"net/url"
 	"os"
 	"reflect"
@@ -86,12 +85,10 @@ func checkAndCleanURL(urlDirty string) string {
 }
 
 func getEnvValueString(env string) string {
-	fmt.Println("---!>", os.Getenv(env), env)
 	return os.Getenv(env)
 }
 func getEnvValueInt(env string) int {
 	foo := os.Getenv(env)
-	fmt.Println(foo, "--", env)
 	if foo == "" {
 		return 0
 	}
