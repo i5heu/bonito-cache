@@ -50,6 +50,16 @@ services:
 ## Docker Hub
 https://hub.docker.com/repository/docker/i5heu/simple-s3-cache
 
+## TODO for 1.0.0
+- Optimize InfluxDB metrics
+- Add a CLI and API to delete a cached file
+- Add range request
+
+## Future features 
+
+Caching in cluster mode.  
+If you build a cluster of simple-S3-cache instances, they will try to request a file from each other first before requesting it from the S3 bucket.  
+
 ## License
 simple-S3-cache © 2022 Mia Heidenstedt and contributors   
 SPDX-License-Identifier: AGPL-3.0  
