@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/i5heu/simple-S3-cache/internal/config"
+	"github.com/i5heu/simple-S3-cache/internal/helper"
 	"github.com/i5heu/simple-S3-cache/internal/log"
 	"github.com/i5heu/simple-S3-cache/internal/ramCache"
 	"github.com/i5heu/simple-S3-cache/internal/storageCache"
@@ -94,8 +95,9 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 	}
 
 	size = uint(len(bytes))
-	h.dataStoreRAM.CacheData(url, bytes, res.Header.Get("Content-Type"))
-	h.dataStoreStorage.CacheData(url, bytes, res.Header.Get("Content-Type"))
-	ctx.Response.Header.Set("Content-Type", res.Header.Get("Content-Type"))
+	sanitizedMime := helper.SanitizeMimeType(res.Header.Get("Content-Type"))
+	h.dataStoreRAM.CacheData(url, bytes, sanitizedMime)
+	h.dataStoreStorage.CacheData(url, bytes, sanitizedMime)
+	ctx.Response.Header.Set("Content-Type", sanitizedMime)
 	ctx.Response.SetBody(bytes)
 }
