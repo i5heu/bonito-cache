@@ -82,7 +82,7 @@ func (h *Handler) handler(ctx *fasthttp.RequestCtx) {
 		}
 		// HTTP 206 (Partial Content)
 		ctx.Response.SetStatusCode(206)
-		ctx.Response.Header.Set("Content-Range", fmt.Sprintf("bytes %d-%d/%d", ranges[0].Start, ranges[0].Start+ranges[0].Length, size))
+		ctx.Response.Header.Set("Content-Range", fmt.Sprintf("bytes %d-%d/%d", ranges[0].Start, ranges[0].Start+ranges[0].Length-1, size))
 		ctx.Response.Header.Set("Content-Length", strconv.FormatUint(uint64(ranges[0].Length), 10))
 		ctx.Response.Header.Set("Content-Type", dataResult.MIME)
 	} else {
