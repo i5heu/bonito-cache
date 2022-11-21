@@ -53,7 +53,6 @@ https://hub.docker.com/repository/docker/i5heu/simple-s3-cache
 ## TODO for 1.0.0
 - Optimize InfluxDB metrics
 - Add a CLI and API to delete a cached file
-- Add range request
 
 ## Future features 
 
