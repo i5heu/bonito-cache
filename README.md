@@ -1,6 +1,6 @@
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/i5heu/bonito-cache)
-[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/i5heu/simple-S3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-S3-cache)
-[![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/simple-S3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-S3-cache)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/i5heu/bonito-cache)](https://hub.docker.com/repository/docker/i5heu/bonito-cache)
+[![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/bonito-cache)](https://hub.docker.com/repository/docker/i5heu/bonito-cache)
 [![wakatime](https://wakatime.com/badge/github/i5heu/bonito-cache.svg)](https://wakatime.com/badge/github/i5heu/bonito-cache)
 
 <p align="center" style="margin: 2em;">
@@ -9,7 +9,10 @@
 
 
 # bonito-cache
-Just hook it in front of your public S3 bucket and enjoy reduction in bandwidth costs to your bucket
+Just hook it in front of your public S3 bucket or other resource and enjoy reduction in bandwidth and request costs to your bucket
+
+#### Name
+The bonito is one of the fastest fish in the ocean (60Km/h?). It is also a type of tuna. The name is a reference to the speed of the cache.
 
 ## Status
 The project is working in its current state. It is not feature complete, but it is usable.
