@@ -3,7 +3,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/simple-s3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-s3-cache)
 [![wakatime](https://wakatime.com/badge/github/i5heu/simple-S3-cache.svg)](https://wakatime.com/badge/github/i5heu/simple-S3-cache)
 
-# simple-S3-cache
+# bonito-cache
 Just hook it in front of your public S3 bucket and enjoy reduction in bandwidth costs to your bucket
 
 ## Status
@@ -51,8 +51,10 @@ services:
 https://hub.docker.com/repository/docker/i5heu/simple-s3-cache
 
 ## TODO for 1.0.0
-- Optimize InfluxDB metrics
 - Add a CLI and API to delete a cached file
+- refactor code
+- build better docs
+- rename project
 
 ## Future features 
 
