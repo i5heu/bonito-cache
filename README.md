@@ -3,6 +3,8 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/simple-S3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-S3-cache)
 [![wakatime](https://wakatime.com/badge/github/i5heu/bonito-cache.svg)](https://wakatime.com/badge/github/i5heu/bonito-cache)
 
+![Logo of a humanoid fish holding notes and a note box](./media/logo_small.png)
+
 # bonito-cache
 Just hook it in front of your public S3 bucket and enjoy reduction in bandwidth costs to your bucket
 
