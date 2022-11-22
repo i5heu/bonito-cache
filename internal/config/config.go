@@ -10,15 +10,15 @@ import (
 // https://masto-cdn.s3.eu-central-003.backblazeb2.com/accounts/avatars/109/292/184/771/206/331/original/79ff3fa20a3d602d.gif
 
 type Config struct {
-	S3Endpoint     string `kind:"url" example:"https://localhost" env:"SS3C_S3_ENDPOINT"`   //has trailing slash
-	CORSDomain     string `kind:"url" example:"https://example.com" env:"SS3C_CORS_DOMAIN"` //has trailing slash
-	UseMaxRamGB    int    `kind:"int" example:"2" env:"SS3C_USE_MAX_RAM_GB"`
-	UseMaxDiskGb   int    `kind:"int" example:"25" env:"SS3C_USE_MAX_DISK_GB"`
-	StoragePath    string `kind:"string" example:"/cache" env:"SS3C_STORAGE_PATH"`
-	InfluxDbUrl    string `kind:"url" example:"" env:"SS3C_INFLUXDB_URL"`
-	InfluxDbToken  string `kind:"string" example:"" env:"SS3C_INFLUXDB_TOKEN"`
-	InfluxDbOrg    string `kind:"string" example:"" env:"SS3C_INFLUXDB_ORG"`
-	InfluxDbBucket string `kind:"string" example:"" env:"SS3C_INFLUXDB_BUCKET"`
+	S3Endpoint     string `kind:"url" example:"https://localhost" env:"BONITO_S3_ENDPOINT"`   //has trailing slash
+	CORSDomain     string `kind:"url" example:"https://example.com" env:"BONITO_CORS_DOMAIN"` //has trailing slash
+	UseMaxRamGB    int    `kind:"int" example:"2" env:"BONITO_USE_MAX_RAM_GB"`
+	UseMaxDiskGb   int    `kind:"int" example:"25" env:"BONITO_USE_MAX_DISK_GB"`
+	StoragePath    string `kind:"string" example:"/cache" env:"BONITO_STORAGE_PATH"`
+	InfluxDbUrl    string `kind:"url" example:"" env:"BONITO_INFLUXDB_URL"`
+	InfluxDbToken  string `kind:"string" example:"" env:"BONITO_INFLUXDB_TOKEN"`
+	InfluxDbOrg    string `kind:"string" example:"" env:"BONITO_INFLUXDB_ORG"`
+	InfluxDbBucket string `kind:"string" example:"" env:"BONITO_INFLUXDB_BUCKET"`
 }
 
 func GetValues() Config {

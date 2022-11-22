@@ -1,6 +1,6 @@
 ![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/i5heu/simple-S3-cache)
-[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/i5heu/simple-s3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-s3-cache)
-[![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/simple-s3-cache)](https://hub.docker.com/repository/docker/i5heu/simple-s3-cache)
+[![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/i5heu/bonito-cache)](https://hub.docker.com/repository/docker/i5heu/bonito-cache)
+[![Docker Pulls](https://img.shields.io/docker/pulls/i5heu/bonito-cache)](https://hub.docker.com/repository/docker/i5heu/bonito-cache)
 [![wakatime](https://wakatime.com/badge/github/i5heu/simple-S3-cache.svg)](https://wakatime.com/badge/github/i5heu/simple-S3-cache)
 
 # bonito-cache
@@ -14,33 +14,33 @@ The code needs some cleanup, refactoring and most importantly tests.
 This cache is still in development and is not ready for production use. It is not yet tested for security vulnerabilities.
 
 ## Available Environment Variables
-* `SS3C_S3_ENDPOINT` - The endpoint of your S3 bucket. Defaults to `https://localhost`
-* `SS3C_CORS_DOMAIN` - The domain to allow CORS requests from. Defaults to `https://example.com`
-* `SS3C_USE_MAX_RAM_GB` - The maximum amount of RAM to use for caching. Defaults to `2` GB
-* `SS3C_USE_MAX_DISK_GB` - The maximum amount of disk space to use for caching. Defaults to `25` GB
-* `SS3C_STORAGE_PATH` - The path to store cached files. Defaults to `/cache`
-* `SS3C_INFLUXDB_URL` - The URL of your InfluxDB instance. Defaults to `""`
-* `SS3C_INFLUXDB_TOKEN` - The token to use for authentication with InfluxDB. Defaults to `""`
-* `SS3C_INFLUXDB_ORG` - The organization to use for authentication with InfluxDB. Defaults to `""`
-* `SS3C_INFLUXDB_BUCKET` - The bucket to use for authentication with InfluxDB. Defaults to `""`
+* `BONITO_S3_ENDPOINT` - The endpoint of your S3 bucket. Defaults to `https://localhost`
+* `BONITO_CORS_DOMAIN` - The domain to allow CORS requests from. Defaults to `https://example.com`
+* `BONITO_USE_MAX_RAM_GB` - The maximum amount of RAM to use for caching. Defaults to `2` GB
+* `BONITO_USE_MAX_DISK_GB` - The maximum amount of disk space to use for caching. Defaults to `25` GB
+* `BONITO_STORAGE_PATH` - The path to store cached files. Defaults to `/cache`
+* `BONITO_INFLUXDB_URL` - The URL of your InfluxDB instance. Defaults to `""`
+* `BONITO_INFLUXDB_TOKEN` - The token to use for authentication with InfluxDB. Defaults to `""`
+* `BONITO_INFLUXDB_ORG` - The organization to use for authentication with InfluxDB. Defaults to `""`
+* `BONITO_INFLUXDB_BUCKET` - The bucket to use for authentication with InfluxDB. Defaults to `""`
 
 ## Docker Compose Example
 ```yaml
 version: "3.7"
 services:
   ss3c:
-    image: i5heu/simple-s3-cache:latest
+    image: i5heu/bonito-cache:latest
     container_name: ss3c
     restart: always
     environment:
-      - SS3C_S3_ENDPOINT=https://cdn.example.com
-      - SS3C_CORS_DOMAIN=https://example.com
-      - SS3C_USE_MAX_RAM_GB=5
-      - SS3C_USE_MAX_DISK_GB=50
-      - SS3C_INFLUXDB_URL=http://influxdb.example.com:8086
-      - SS3C_INFLUXDB_TOKEN=super-cool-token-iahfpwihg9h32ithowh
-      - SS3C_INFLUXDB_ORG=super-cool-org
-      - SS3C_INFLUXDB_BUCKET=super-cool-bucket
+      - BONITO_S3_ENDPOINT=https://cdn.example.com
+      - BONITO_CORS_DOMAIN=https://example.com
+      - BONITO_USE_MAX_RAM_GB=5
+      - BONITO_USE_MAX_DISK_GB=50
+      - BONITO_INFLUXDB_URL=http://influxdb.example.com:8086
+      - BONITO_INFLUXDB_TOKEN=super-cool-token-iahfpwihg9h32ithowh
+      - BONITO_INFLUXDB_ORG=super-cool-org
+      - BONITO_INFLUXDB_BUCKET=super-cool-bucket
     ports:
       - 8080:8084
     volumes:
@@ -48,7 +48,7 @@ services:
 ```
 
 ## Docker Hub
-https://hub.docker.com/repository/docker/i5heu/simple-s3-cache
+https://hub.docker.com/repository/docker/i5heu/simple-S3-cache
 
 ## TODO for 1.0.0
 - Add a CLI and API to delete a cached file
