@@ -5,9 +5,9 @@ import (
 	"encoding/hex"
 	"sync"
 
-	"github.com/i5heu/simple-S3-cache/internal/log"
+	"github.com/i5heu/bonito-cache/internal/log"
 
-	"github.com/i5heu/simple-S3-cache/internal/config"
+	"github.com/i5heu/bonito-cache/internal/config"
 )
 
 type DataStore struct {

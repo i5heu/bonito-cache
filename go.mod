@@ -1,4 +1,4 @@
-module github.com/i5heu/simple-S3-cache
+module github.com/i5heu/bonito-cache
 
 go 1.19
 

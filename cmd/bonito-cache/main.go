@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/i5heu/simple-S3-cache/internal/config"
-	"github.com/i5heu/simple-S3-cache/internal/helper"
-	"github.com/i5heu/simple-S3-cache/internal/log"
-	"github.com/i5heu/simple-S3-cache/internal/ramCache"
-	"github.com/i5heu/simple-S3-cache/internal/storageCache"
+	"github.com/i5heu/bonito-cache/internal/config"
+	"github.com/i5heu/bonito-cache/internal/helper"
+	"github.com/i5heu/bonito-cache/internal/log"
+	"github.com/i5heu/bonito-cache/internal/ramCache"
+	"github.com/i5heu/bonito-cache/internal/storageCache"
 
 	"github.com/gotd/contrib/http_range"
 	"github.com/valyala/fasthttp"

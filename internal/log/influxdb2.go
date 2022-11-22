@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/i5heu/simple-S3-cache/internal/config"
+	"github.com/i5heu/bonito-cache/internal/config"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"
