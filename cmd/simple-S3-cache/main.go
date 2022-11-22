@@ -142,7 +142,6 @@ func (h *Handler) getData(ctx *fasthttp.RequestCtx) DataStoreResult {
 	}
 
 	res, err := http.Get(url)
-	defer res.Body.Close()
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
 		ctx.Response.SetStatusCode(500)
@@ -154,6 +153,7 @@ func (h *Handler) getData(ctx *fasthttp.RequestCtx) DataStoreResult {
 			Error:  err,
 		}
 	}
+	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
 		ctx.Response.SetStatusCode(res.StatusCode)
