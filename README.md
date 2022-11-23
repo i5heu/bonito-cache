@@ -34,10 +34,12 @@ The code needs some cleanup, refactoring and most importantly tests.
 * `BONITO_USE_MAX_RAM_GB` - The maximum amount of RAM to use for caching. Defaults to `2` GB
 * `BONITO_USE_MAX_DISK_GB` - The maximum amount of disk space to use for caching. Defaults to `25` GB
 * `BONITO_STORAGE_PATH` - The path to store cached files. Defaults to `/cache`
-* `BONITO_INFLUXDB_URL` - The URL of your InfluxDB instance. Defaults to `""`
-* `BONITO_INFLUXDB_TOKEN` - The token to use for authentication with InfluxDB. Defaults to `""`
-* `BONITO_INFLUXDB_ORG` - The organization to use for authentication with InfluxDB. Defaults to `""`
-* `BONITO_INFLUXDB_BUCKET` - The bucket to use for authentication with InfluxDB. Defaults to `""`
+* `BONITO_INFLUXDB_URL` - OPTIONAL The URL of your InfluxDB instance. Defaults to `""`
+* `BONITO_INFLUXDB_TOKEN` - OPTIONAL The token to use for authentication with InfluxDB. Defaults to `""`
+* `BONITO_INFLUXDB_ORG` - OPTIONAL The organization to use for authentication with InfluxDB. Defaults to `""`
+* `BONITO_INFLUXDB_BUCKET` - OPTIONAL The bucket to use for authentication with InfluxDB. Defaults to `""`
+
+Note: InfluxDB is only used for statistics and is optional to configure.
 
 ## Docker Compose Example
 ```yaml
