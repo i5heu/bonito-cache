@@ -9,7 +9,17 @@
 
 
 # bonito-cache
-Just hook it in front of your public S3 bucket or other resource and enjoy reduction in bandwidth and request costs to your bucket
+This simple cache can greatly reduce the bandwidth and requests costs of a S3 Bucket or any other public backend storage, if this cache is used from a cheap server provider like Hetzner.  
+
+You can simply configure how much RAM and file storage you want to allocate to cached files (e.g. 20GB RAM and 1TB storage). The cache will then automatically delete the least recently used files to free up space if the cache is full.  
+
+Detailed statistics can be optionally written to a InfluxDB to monitor the cache usage and performance.  
+
+All this is can be done very simple with a few environment variables.  
+
+On my mastodon instance i can reduce the bandwidth costs by a whopping 95% with bonito-cache.
+
+![A dashboard showing Data Sent 760MB Cached, 43.1MB Not Cached and 1.14GB RAM and 4.14GB allocated to cache](./media/stats.png)
 
 #### Name
 The bonito is one of the fastest fish in the ocean (60Km/h?). It is also a type of tuna. The name is a reference to the speed of the cache.
@@ -17,9 +27,6 @@ The bonito is one of the fastest fish in the ocean (60Km/h?). It is also a type 
 ## Status
 The project is working in its current state. It is not feature complete, but it is usable.
 The code needs some cleanup, refactoring and most importantly tests.
-
-## !WARNING!
-This cache is still in development and is not ready for production use. It is not yet tested for security vulnerabilities.
 
 ## Available Environment Variables
 * `BONITO_S3_ENDPOINT` - The endpoint of your S3 bucket. Defaults to `https://localhost`
@@ -64,8 +71,7 @@ https://hub.docker.com/repository/docker/i5heu/bonito-cache
 - build better docs
 - rename project
 
-## Future features 
-
+## Future features
 Caching in cluster mode.  
 If you build a cluster of bonito-cache instances, they will try to request a file from each other first before requesting it from the S3 bucket.  
 
