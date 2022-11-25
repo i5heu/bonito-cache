@@ -1,6 +1,8 @@
 package helper
 
-import "unicode"
+import (
+	"unicode"
+)
 
 func SanitizeMimeType(mime string) string {
 	if mime == "" {
@@ -12,7 +14,7 @@ func SanitizeMimeType(mime string) string {
 
 	// check if mime is only ascii
 	for _, rune := range mime {
-		if unicode.IsPrint(rune) == false {
+		if unicode.IsLetter(rune) == false && unicode.IsNumber(rune) == false && rune != '/' && rune != '.' && rune != '-' && rune != '_' {
 			return "application/octet-stream"
 		}
 	}
