@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/i5heu/bonito-cache/internal/clusterCache"
 	"github.com/i5heu/bonito-cache/internal/config"
 	"github.com/i5heu/bonito-cache/internal/handler"
 	"github.com/i5heu/bonito-cache/internal/log"
@@ -26,6 +27,14 @@ func main() {
 		Log:  logs,
 	}
 	go dataStoreStorage.StorageFileManager()
+
+	if conf.ClusterActive {
+		cluster := clusterCache.Cluster{
+			Conf: conf,
+			Log:  logs,
+		}
+		go cluster.ClusterManager()
+	}
 
 	h := handler.Handler{
 		Conf:             conf,

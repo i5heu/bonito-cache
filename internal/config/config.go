@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"net/url"
 	"os"
 	"reflect"
@@ -19,6 +20,9 @@ type Config struct {
 	InfluxDbToken  string `kind:"string" example:"" env:"BONITO_INFLUXDB_TOKEN"`
 	InfluxDbOrg    string `kind:"string" example:"" env:"BONITO_INFLUXDB_ORG"`
 	InfluxDbBucket string `kind:"string" example:"" env:"BONITO_INFLUXDB_BUCKET"`
+	ClusterActive  bool   `kind:"bool" example:"false" env:"BONITO_CLUSTER_ACTIVE"`
+	ClusterSeed    string `kind:"url" example:"https://node1.example.com" env:"BONITO_CLUSTER_SEED"` // must be https!
+	ClusterKey     string `kind:"string" example:"" env:"BONITO_CLUSTER_KEY"`
 }
 
 func GetValues() Config {
@@ -42,6 +46,19 @@ func GetValues() Config {
 			}
 
 			reflect.ValueOf(&c).Elem().FieldByName(field.Name).SetString(value)
+		case "bool":
+			value := getEnvValueString(field.Tag.Get("env"))
+			switch value {
+			case "true":
+				reflect.ValueOf(&c).Elem().FieldByName(field.Name).SetBool(true)
+			case "":
+			case "false":
+				reflect.ValueOf(&c).Elem().FieldByName(field.Name).SetBool(false)
+			default:
+				fmt.Println("Error in env variable " + field.Name + " Invalid value for bool: " + value)
+				reflect.ValueOf(&c).Elem().FieldByName(field.Name).SetBool(false)
+			}
+
 		case "int":
 			intValue := getEnvValueInt(field.Tag.Get("env"))
 			if intValue == 0 {
