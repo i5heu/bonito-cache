@@ -4,7 +4,7 @@
 [![wakatime](https://wakatime.com/badge/github/i5heu/bonito-cache.svg)](https://wakatime.com/badge/github/i5heu/bonito-cache)
 
 <p align="center" style="margin: 2em;">
-  <img style="border-radius: 25%;" height="400" alt="Logo of a humanoid fish holding notes and a note box" src="./media/logo_small.png">
+  <img style="border-radius: 25%; max-height: 400px;" alt="Logo of a humanoid fish holding notes and a note box" src="./media/logo_small.png">
 </p>
 
 
@@ -45,9 +45,9 @@ Note: InfluxDB is only used for statistics and is optional to configure.
 ```yaml
 version: "3.7"
 services:
-  ss3c:
+  bonito:
     image: i5heu/bonito-cache:latest
-    container_name: ss3c
+    container_name: bonito
     restart: always
     environment:
       - BONITO_S3_ENDPOINT=https://cdn.example.com
@@ -71,7 +71,6 @@ https://hub.docker.com/repository/docker/i5heu/bonito-cache
 - Add a CLI and API to delete a cached file
 - refactor code
 - build better docs
-- rename project
 
 ## Future features
 Caching in cluster mode.  
