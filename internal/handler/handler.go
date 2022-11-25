@@ -119,7 +119,7 @@ func (h *Handler) getData(ctx *fasthttp.RequestCtx) DataStoreResult {
 		}
 	}
 
-	res, err := http.Get(url)
+	newData, sanitizedMime, err := h.getDataFromBackend(url)
 	if err != nil {
 		fmt.Printf("error making http request: %s\n", err)
 		ctx.Response.SetStatusCode(500)
@@ -131,33 +131,37 @@ func (h *Handler) getData(ctx *fasthttp.RequestCtx) DataStoreResult {
 			Error:  err,
 		}
 	}
+
+	// store the requested file in RAM and files storage
+	h.DataStoreRAM.CacheData(url, newData, sanitizedMime)
+	h.DataStoreStorage.CacheData(url, newData, sanitizedMime)
+
+	return DataStoreResult{
+		Data:   newData,
+		MIME:   sanitizedMime,
+		Size:   uint(len(newData)),
+		Cached: false,
+		Error:  nil,
+	}
+}
+
+func (h *Handler) getDataFromBackend(url string) ([]byte, string, error) {
+	res, err := http.Get(url)
+	if err != nil {
+		return nil, "", err
+	}
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		ctx.Response.SetStatusCode(res.StatusCode)
-		return DataStoreResult{
-			Data:   nil,
-			MIME:   "",
-			Size:   0,
-			Cached: false,
-			Error:  err,
-		}
+		return nil, "", err
 	}
 
 	bytes, err := ioutil.ReadAll(res.Body)
 	if err != nil {
-		fmt.Println("error reading response body: ", err)
+		return nil, "", err
 	}
 
 	sanitizedMime := helper.SanitizeMimeType(res.Header.Get("Content-Type"))
-	h.DataStoreRAM.CacheData(url, bytes, sanitizedMime)
-	h.DataStoreStorage.CacheData(url, bytes, sanitizedMime)
 
-	return DataStoreResult{
-		Data:   bytes,
-		MIME:   sanitizedMime,
-		Size:   uint(len(bytes)),
-		Cached: false,
-		Error:  nil,
-	}
+	return bytes, sanitizedMime, nil
 }
