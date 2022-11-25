@@ -4,7 +4,7 @@
 [![wakatime](https://wakatime.com/badge/github/i5heu/bonito-cache.svg)](https://wakatime.com/badge/github/i5heu/bonito-cache)
 
 <p align="center" style="margin: 2em;">
-  <img style="border-radius: 25%; max-height: 400px;" alt="Logo of a humanoid fish holding notes and a note box" src="./media/logo_small.png">
+  <img width="400" height="400" style="border-radius: 25%; max-width: 100%" alt="Logo of a humanoid fish holding notes and a note box" src="./media/logo_small.png">
 </p>
 
 

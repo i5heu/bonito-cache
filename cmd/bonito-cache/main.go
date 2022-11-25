@@ -27,6 +27,11 @@ func main() {
 	}
 	go dataStoreStorage.StorageFileManager()
 
-	h := handler.Handler{Conf: conf, DataStoreRAM: &dataStoreRAM, DataStoreStorage: &dataStoreStorage, Log: logs}
+	h := handler.Handler{
+		Conf:             conf,
+		DataStoreRAM:     &dataStoreRAM,
+		DataStoreStorage: &dataStoreStorage,
+		Log:              logs,
+	}
 	fasthttp.ListenAndServe(":8084", h.HandlerFunc)
 }
