@@ -9,20 +9,20 @@
 
 
 # bonito-cache
-This simple cache can greatly reduce the bandwidth and requests costs of a S3 Bucket or any other public backend storage, if this cache is used from a cheap server provider like Hetzner.  
+This simple cache can greatly reduce the bandwidth and requests costs of a S3 Bucket or any other public backend storage if this cache is used from a cheap server provider like Hetzner.  
 
 You can simply configure how much RAM and file storage you want to allocate to cached files (e.g. 20GB RAM and 1TB storage). The cache will then automatically delete the least recently used files to free up space if the cache is full.  
 
-Detailed statistics can be optionally written to a InfluxDB to monitor the cache usage and performance.  
+Detailed statistics can optionally be written to a InfluxDB to monitor the cache usage and performance.  
 
-All this is can be done very simple with a few environment variables.  
+All this can be done very easily with a few environment variables.  
 
-On my mastodon instance i can reduce the bandwidth costs by a whopping 95% with bonito-cache.
+On my mastodon instance I can reduce the bandwidth costs by a whopping 95% with bonito-cache.
 
 ![A dashboard showing Data Sent 760MB Cached, 43.1MB Not Cached and 1.14GB RAM and 4.14GB allocated to cache](./media/stats.png)
 
 #### Name
-The bonito is one of the fastest fish in the ocean (60Km/h?). It is also a type of tuna. The name is a reference to the speed of the cache.
+The bonito is one of the fastest fish in the ocean (60km/h?). It is also a type of tuna. The name is a reference to the speed of the cache.
 
 ## Status
 The project is working in its current state. It is not feature complete, but it is usable.
