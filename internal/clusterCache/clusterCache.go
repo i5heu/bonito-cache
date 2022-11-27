@@ -2,8 +2,11 @@ package clusterCache
 
 import (
 	"errors"
+	"sync"
+	"time"
 
 	"github.com/i5heu/bonito-cache/internal/log"
+	"github.com/valyala/fasthttp"
 
 	"github.com/i5heu/bonito-cache/internal/config"
 )
@@ -18,8 +21,9 @@ TODO:
 */
 
 type Cluster struct {
-	Conf config.Config
-	Log  log.Logger
+	Conf  config.Config
+	Log   log.Logger
+	nodes sync.Map
 }
 
 func (c *Cluster) validateConfig() error {
@@ -33,9 +37,57 @@ func (c *Cluster) validateConfig() error {
 	return nil
 }
 
+type NodeStatus struct {
+	url           string
+	lastHeartbeat time.Time
+	failedBeats   int
+}
+
 func (c *Cluster) ClusterManager() {
 	err := c.validateConfig()
 	if err != nil {
 		panic("Cluster config is invalid")
 	}
+
+	for {
+		c.heartbeat()
+		c.garbageCollector()
+		time.Sleep(5 * time.Second)
+	}
+}
+
+func (c *Cluster) heartbeat() {
+	c.nodes.Range(func(keyI, valueI interface{}) bool {
+		key := keyI.(string)
+		ns := valueI.(NodeStatus)
+
+		if time.Since(ns.lastHeartbeat) > 12*time.Second {
+			c.nodes.Delete(key)
+		}
+
+		return false
+	})
+}
+func (c *Cluster) garbageCollector() {
+	c.nodes.Range(func(keyI, valueI interface{}) bool {
+		key := keyI.(string)
+		ns := valueI.(NodeStatus)
+
+		if time.Since(ns.lastHeartbeat) > 12*time.Second {
+			c.nodes.Delete(key)
+		}
+
+		return false
+	})
+}
+
+func (c *Cluster) ClusterApiHandler(ctx *fasthttp.RequestCtx) {
+	// check if key is correct
+}
+
+func (c *Cluster) GetCacheData(url string) ([]byte, string) {
+
+	// iterate through nodes with no-cache req
+
+	return []byte{}, ""
 }
