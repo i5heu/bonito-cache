@@ -71,6 +71,7 @@ https://hub.docker.com/repository/docker/i5heu/bonito-cache
 - Add a CLI and API to delete a cached file
 - refactor code
 - build better docs
+- experimental cluster mode
 
 ## Future features
 Caching in cluster mode.  
