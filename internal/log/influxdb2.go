@@ -45,7 +45,7 @@ func (l *Logger) LogRequest(timeStart time.Time, url string, statusCode int, cac
 	p := influxdb2.NewPointWithMeasurement("stat").
 		AddTag("statusCode", strconv.Itoa(statusCode)).
 		AddTag("cached", strconv.FormatBool(cached)).
-		AddField("duration", time.Since(timeStart).Microseconds()/1000).
+		AddField("duration", time.Since(timeStart).Microseconds()).
 		AddField("file_size", fileSize).
 		AddField("url", url).
 		SetTime(time.Now())
@@ -62,7 +62,7 @@ func (l *Logger) LogCache(timeStart time.Time, cacheName string, cacheSize uint,
 		AddTag("cacheName", cacheName).
 		AddField("cacheSize", cacheSize).
 		AddField("cacheSizeMax", cacheSizeMax).
-		AddField("duration", time.Since(timeStart).Microseconds()/1000).
+		AddField("duration", time.Since(timeStart).Microseconds()).
 		SetTime(time.Now())
 
 	l.Write.WritePoint(p)
