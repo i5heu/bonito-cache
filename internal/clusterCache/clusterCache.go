@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/i5heu/bonito-cache/internal/log"
-	"github.com/valyala/fasthttp"
 
 	"github.com/i5heu/bonito-cache/internal/config"
 )
@@ -58,12 +57,6 @@ func (c *Cluster) ClusterManager() {
 
 func (c *Cluster) heartbeat() {
 	c.nodes.Range(func(keyI, valueI interface{}) bool {
-		key := keyI.(string)
-		ns := valueI.(NodeStatus)
-
-		if time.Since(ns.lastHeartbeat) > 12*time.Second {
-			c.nodes.Delete(key)
-		}
 
 		return false
 	})
@@ -79,10 +72,6 @@ func (c *Cluster) garbageCollector() {
 
 		return false
 	})
-}
-
-func (c *Cluster) ClusterApiHandler(ctx *fasthttp.RequestCtx) {
-	// check if key is correct
 }
 
 func (c *Cluster) GetCacheData(url string) ([]byte, string) {
