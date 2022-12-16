@@ -40,11 +40,17 @@ func (h *Handler) HandlerFunc(ctx *fasthttp.RequestCtx) {
 	dataResult := h.getData(ctx)
 	if dataResult.Error != nil {
 		ctx.Response.SetStatusCode(500)
+		ctx.Response.Header.Set("Cache-Control", "max-age=0")
 		ctx.Response.SetBodyString(dataResult.Error.Error())
 		return
 	}
 	size = dataResult.Size
 	cached = dataResult.Cached
+	if cached {
+		ctx.Response.Header.Set("X-Cached", "true")
+	} else {
+		ctx.Response.Header.Set("X-Cached", "false")
+	}
 
 	if ctx.Request.Header.Peek("Range") != nil {
 		// parse the range header
@@ -153,7 +159,7 @@ func (h *Handler) getDataFromBackend(url string) ([]byte, string, error) {
 	defer res.Body.Close()
 
 	if res.StatusCode != 200 {
-		return nil, "", err
+		return nil, "", fmt.Errorf("status code error: %d %s", res.StatusCode, res.Status)
 	}
 
 	bytes, err := ioutil.ReadAll(res.Body)

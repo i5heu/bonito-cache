@@ -17,6 +17,7 @@ TODO:
 - output all nodes in stdout log
 - special non cache request
 - round robbin over nodes in cluster to find file
+- make influxdb stats ready for cluster setup
 */
 
 type Cluster struct {
